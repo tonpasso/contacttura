@@ -1,7 +1,6 @@
 package com.contacttura.contacttura;
 
-import java.util.stream.LongStream;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,23 +17,36 @@ public class ContactturaApplication {
 	}
 	
 	
-	@Bean
-	CommandLineRunner init(ContacturaRepository repository) {
-		return args -> {
+//	@Bean
+//	CommandLineRunner init(ContacturaRepository repository) {
+//		return args -> {
 //			O delete é opcional			
-			repository.deleteAll();
-			LongStream.range(1, 11)
-			.mapToObj( i -> {
-				Contactura c = new Contactura();
-				c.setName("Contactura User " + i);
-				c.setEmail("contactura" + i + "@gmail.com");
-				c.setPhone("(081) 9" + i + i + i + i + "-" + i + i + i + i);
-				return c;
-			})
-			.map(m -> repository.save(m))
-			.forEach(System.out::println);
-		};			
-	}	
+//			repository.deleteAll();
+//			LongStream.range(1, 11)
+//			.mapToObj( i -> {
+//				Contactura c = new Contactura();
+//				c.setName("Contactura User " + i);
+//				c.setEmail("contactura" + i + "@gmail.com");
+//				c.setPhone("(081) 9" + i + i + i + i + "-" + i + i + i + i);
+//				return c;
+//			})
+//			.map(m -> repository.save(m))
+//			.forEach(System.out::println);
+//		};			
+//	}	
+	
+	@Bean
+	public CommandLineRunner run(@Autowired ContacturaRepository contacturaRepository) {
+		
+		return args -> {
+			Contactura contact = Contactura.builder()
+									.name("Wellington Passo")
+									.email("ton@gmail.com")
+									.phone("(81) 99999-8888")
+									.build();
+			contacturaRepository.save(contact);
+		};
+	}
 
 }
 

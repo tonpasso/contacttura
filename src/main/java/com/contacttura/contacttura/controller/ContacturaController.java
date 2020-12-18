@@ -21,26 +21,26 @@ import com.contacttura.contacttura.repository.ContacturaRepository;
 @RequestMapping({"/contactura"})
 public class ContacturaController {
 	
-	@Autowired
-	private ContacturaRepository repository;
+	private final ContacturaRepository repository;
 	
 //  Fluxo semelhante ao implements que define que este controlador com seus métodos
 //  será acessado através do repositório
-//	ContacturaController(ContacturaRepository contacturaRepository){
-//		this.repository = contacturaRepository;
-//	}
+	@Autowired
+	ContacturaController(ContacturaRepository contacturaRepository){
+		this.repository = contacturaRepository;
+	}
 	
 //	List All
 //  http://localhost:8090/contactura
 	@GetMapping
-	public List findAll() {
+	public List<Contactura> findAll() {
 		return repository.findAll();
 	}
 	
 //  Find by Id
 //  http://localhost:8090/contactura/id
 	@GetMapping(value = "{id}")
-	public ResponseEntity findById(@PathVariable long id) {
+	public ResponseEntity<Contactura> findById(@PathVariable long id) {
 		return repository.findById(id)
 				.map(record -> ResponseEntity.ok().body(record))
 				.orElse(ResponseEntity.notFound().build());
@@ -56,7 +56,7 @@ public class ContacturaController {
 //	Update
 //	http://localhost:8090/contactura/id
 	@PutMapping(value = "{id}")
-	public ResponseEntity update(@PathVariable("id") long id, @RequestBody Contactura contactura) {
+	public ResponseEntity<Contactura> update(@PathVariable("id") long id, @RequestBody Contactura contactura) {
 		return repository.findById(id)
 				.map(record -> {
 					record.setName(contactura.getName());
@@ -78,4 +78,3 @@ public class ContacturaController {
 				}).orElse(ResponseEntity.notFound().build());
 	}
 }
-

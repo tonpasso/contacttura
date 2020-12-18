@@ -21,8 +21,12 @@ import com.contacttura.contacttura.repository.ContacturaUserRepository;
 @RequestMapping({"/user"})
 public class ContacturaUserController {
 	
+	private final ContacturaUserRepository repository;
+	
 	@Autowired
-	private ContacturaUserRepository repository;
+	public ContacturaUserController(ContacturaUserRepository repository) {
+		this.repository = repository;
+	}
 	
 //	@Autowired
 //	private PasswordEncoder passwordEncoder;
@@ -31,14 +35,14 @@ public class ContacturaUserController {
 //	List All
 //  http://localhost:8090/user
 	@GetMapping
-	public List findAll() {
+	public List<ContacturaUser> findAll() {
 		return repository.findAll();
 	}
 	
 //	List by Id
 //  http://localhost:8090/user/5
 	@GetMapping(value = "{id}")
-	public ResponseEntity findById(@PathVariable long id) {
+	public ResponseEntity<ContacturaUser> findById(@PathVariable long id) {
 		return repository.findById(id)
 				.map(record -> ResponseEntity.ok().body(record))
 				.orElse(ResponseEntity.notFound().build());
@@ -54,7 +58,7 @@ public class ContacturaUserController {
 //	Update
 //  http://localhost:8090/user/5
 	@PutMapping(value = "{id}")
-	public ResponseEntity update(@PathVariable("id") long id, @RequestBody ContacturaUser contacturaUser) {
+	public ResponseEntity<ContacturaUser> update(@PathVariable("id") long id, @RequestBody ContacturaUser contacturaUser) {
 		return repository.findById(id)
 				.map(record -> {
 					record.setUsername(contacturaUser.getUsername());
